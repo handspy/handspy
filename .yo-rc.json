@@ -1,0 +1,12 @@
+{
+  "generator-jhipster": {
+    "appsFolders": ["gateway", "notification", "pbanalysis", "project", "sampling", "uaa"],
+    "directoryPath": "../",
+    "gatewayType": "zuul",
+    "clusteredDbApps": [],
+    "monitoring": "elk",
+    "consoleOptions": ["zipkin"],
+    "serviceDiscoveryType": "eureka",
+    "jwtSecretKey": "Mzg5ZTk5YTAzZmMxMTYzMzA4OTk0YzdlYmZmN2FmNDg0NDYzZTgwNmUxMTI0ZjhmN2RmOGJlNTg0MmM2MDNiYmFhNDUyNzJiZWRjYTY0MGI3ZTlkY2JjNmZjYzZjNzQzZTIxNg=="
+  }
+}
