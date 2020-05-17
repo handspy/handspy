@@ -10,17 +10,17 @@ jhipster:
         base64-secret: Mzg5ZTk5YTAzZmMxMTYzMzA4OTk0YzdlYmZmN2FmNDg0NDYzZTgwNmUxMTI0ZjhmN2RmOGJlNTg0MmM2MDNiYmFhNDUyNzJiZWRjYTY0MGI3ZTlkY2JjNmZjYzZjNzQzZTIxNg==
   logging:
     logstash: # forward logs to ELK
-      enabled: true
+      enabled: false
       host: jhipster-logstash
   metrics:
     logs: # report metrics in the logs
-      enabled: true
+      enabled: false
       report-frequency: 60 # in seconds
 
 spring:
   zipkin:
     base-url: http://jhipster-zipkin:9411
-    enabled: true
+    enabled: false
   sleuth:
     sampler:
       probability: 1 # report 100% of traces to Zipkin
