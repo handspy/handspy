@@ -29,25 +29,6 @@ services:
   # notification-mongodb:
   #   image: 'mongo:4.0.16'
 
-  pbanalysis:
-    image: pbanalysis
-    environment:
-      - _JAVA_OPTIONS=-Xmx512m -Xms256m
-      - 'SPRING_PROFILES_ACTIVE=prod,swagger'
-      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=false
-      - 'EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/eureka'
-      - 'SPRING_CLOUD_CONFIG_URI=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/config'
-      - 'SPRING_DATASOURCE_URL=jdbc:postgresql://pbanalysis-postgresql:5432/pbanalysis'
-      - JHIPSTER_SLEEP=30
-      - 'KAFKA_BOOTSTRAPSERVERS=kafka:9092'
-      - JHIPSTER_REGISTRY_PASSWORD=admin
-  pbanalysis-postgresql:
-    image: 'postgres:12.1'
-    environment:
-      - PGDATA=./database/
-      - POSTGRES_USER=pbanalysis
-      - POSTGRES_PASSWORD=
-
   project:
     image: project
     environment:
@@ -63,9 +44,11 @@ services:
   project-postgresql:
     image: 'postgres:12.1'
     environment:
-      - PGDATA=./database/
+      - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_USER=project
       - POSTGRES_PASSWORD=
+    volumes:
+      - ./databases/project:/var/lib/postgresql/data/pgdata
 
   sampling:
     image: sampling
@@ -82,9 +65,50 @@ services:
   sampling-postgresql:
     image: 'postgres:12.1'
     environment:
-      - PGDATA=./database/
+      - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_USER=sampling
       - POSTGRES_PASSWORD=
+    volumes:
+      - ./databases/sampling:/var/lib/postgresql/data/pgdata
+
+  pbanalysis:
+    image: pbanalysis
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - 'SPRING_PROFILES_ACTIVE=prod,swagger'
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=false
+      - 'EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/eureka'
+      - 'SPRING_CLOUD_CONFIG_URI=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/config'
+      - 'SPRING_DATASOURCE_URL=jdbc:postgresql://pbanalysis-postgresql:5432/pbanalysis'
+      - JHIPSTER_SLEEP=30
+      - 'KAFKA_BOOTSTRAPSERVERS=kafka:9092'
+      - JHIPSTER_REGISTRY_PASSWORD=admin
+  pbanalysis-postgresql:
+    image: 'postgres:12.1'
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_USER=pbanalysis
+      - POSTGRES_PASSWORD=
+    volumes:
+      - ./databases/pbanalysis:/var/lib/postgresql/data/pgdata
+
+  linguistics:
+    image: linguistics
+    environment:
+      - _JAVA_OPTIONS=-Xmx2048m -Xms512m
+      - 'SPRING_PROFILES_ACTIVE=prod,swagger'
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=false
+      - 'EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/eureka'
+      - 'SPRING_CLOUD_CONFIG_URI=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/config'
+      - 'SPRING_DATA_MONGODB_URI=mongodb://linguistics-mongodb:27017'
+      - SPRING_DATA_MONGODB_DATABASE=linguistics
+      - JHIPSTER_SLEEP=30
+      - 'KAFKA_BOOTSTRAPSERVERS=kafka:9092'
+      - JHIPSTER_REGISTRY_PASSWORD=admin
+  linguistics-mongodb:
+    image: 'mongo:4.2.7'
+    volumes:
+      - ./databases/linguistics:/data/db
 
   uaa:
     image: uaa
@@ -100,16 +124,18 @@ services:
   uaa-postgresql:
     image: 'postgres:12.1'
     environment:
-      - PGDATA=./database/
+      - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_USER=uaa
       - POSTGRES_PASSWORD=
-
-  ui:
-    image: ui:prod
     volumes:
-      - ./nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
-    ports:
-      - '8081:80'
+      - ./databases/uaa:/var/lib/postgresql/data/pgdata
+
+  #ui:
+  #  image: ui:prod
+  #  volumes:
+  #    - ./nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
+  #  ports:
+  #    - '8081:80'
 
   # zookeeper:
   #   extends:
